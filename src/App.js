@@ -1,25 +1,57 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import {
+  convertToArray,
+  convertToObject,
+  countCharacters,
+  findHighest,
+} from "./utils/utils";
 
-function App() {
+const App = () => {
+  const [characterCount, setCharacterCount] = useState([]);
+  const [highCountChars, setHighCountChars] = useState({});
+  const [inputValue, setInputValue] = useState("");
+  const [text, setText] = useState("");
+
+  const handleCalculate = () => {
+    setCharacterCount(convertToArray(countCharacters(inputValue)));
+
+    setHighCountChars(
+      convertToObject(findHighest(convertToArray(countCharacters(inputValue))))
+    );
+    setText(inputValue);
+    setInputValue("");
+  };
+
+  const handleTextAreaChange = (event) => {
+    setInputValue(event.target.value);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <div>Spy Counter</div>
+      <p>Count the number of times a character appears in a text</p>
+      <ul>
+        {characterCount.map((character) => (
+          <li key={character[0]}>{character[0] + ": " + character[1]}</li>
+        ))}
+      </ul>
+      <p>
+        {[...text].map((char, idx) =>
+          highCountChars[char] ? (
+            <mark key={idx}>{char}</mark>
+          ) : (
+            <span key={idx}>{char}</span>
+          )
+        )}
+      </p>
+      <div>
+      <textarea onChange={handleTextAreaChange} value={inputValue} />
+      </div>
+      <button disabled={!inputValue} onClick={handleCalculate}>
+        Calculate
+      </button>
     </div>
   );
-}
+};
 
 export default App;
